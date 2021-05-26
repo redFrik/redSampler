@@ -1,4 +1,4 @@
-a [Quark](http://supercollider-quarks.github.io/quarks/) for [SuperCollider](http://supercollider.github.io)
+a [Quark](https://supercollider-quarks.github.io/quarks/) for [SuperCollider](https://supercollider.github.io)
 
 install it from within supercollider with the command `Quarks.install("redSampler")`
 

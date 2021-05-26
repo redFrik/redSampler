@@ -1,7 +1,7 @@
 CLASS:: RedDiskInSampler
 SUMMARY:: playing soundfiles from disk
 CATEGORIES:: Red>redSampler
-RELATED:: Classes/RedDiskInSamplerGiga, Classes/RedSampler, Classes/RedDiskInPlayer
+RELATED:: Classes/RedDiskInSamplerGiga, Classes/RedSampler, Classes/RedDiskInPlayer, Overviews/redSampler
 
 DESCRIPTION::
 This class buffers a small portion of a soundfile in RAM and then streams the rest from disk. It is built around the link::Classes/DiskIn:: ugen and makes it quick and easy to preload and manage lots of samples - much more than you could fit in your RAM. It associates each soundfile with a key (usually a number or a symbol) and can simultaneously play code::n:: overlaps of each sound.

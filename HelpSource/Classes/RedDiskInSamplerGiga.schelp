@@ -1,7 +1,7 @@
 CLASS:: RedDiskInSamplerGiga
 SUMMARY:: playing soundfiles from disk - fast trigger version
 CATEGORIES:: Red>redSampler
-RELATED:: Classes/RedDiskInSampler, Classes/RedSampler, Classes/RedDiskInPlayer
+RELATED:: Classes/RedDiskInSampler, Classes/RedSampler, Classes/RedDiskInPlayer, Overviews/redSampler
 
 DESCRIPTION::
 This version is recommended when syncing to a beat, triggering samples from MIDI or just need to start sample playback instantly. It works similar to the commercial giga sampler software as it preloads/cues small buffers into RAM and then streams the rest from disk. This allows you to have quick access to gigabytes of samples. Many more soundfiles than would fit in RAM.

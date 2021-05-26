@@ -1,7 +1,7 @@
 CLASS:: RedDiskInPlayer
 SUMMARY:: simple GUI for soundfile playback from disk
 CATEGORIES:: Red>redSampler
-RELATED:: Classes/RedDiskInSampler
+RELATED:: Classes/RedDiskInSampler, Overviews/redSampler
 
 DESCRIPTION::
 Uses link::Classes/RedDiskInSampler:: to stream soundfiles from disk. Use it to play back long soundfiles.

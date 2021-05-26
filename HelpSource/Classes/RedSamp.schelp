@@ -1,0 +1,53 @@
+CLASS:: RedSamp
+SUMMARY:: playing buffers
+CATEGORIES:: Red>redSampler
+RELATED:: Classes/RedSampler, Classes/RedDiskInSampler, Classes/RedLoop, Overviews/redSampler
+
+DESCRIPTION::
+This class uses link::Classes/PlayBuf:: to play back parts of a buffer. With code::overlap:: one can set the number of voices. It uses the same interface as link::Classes/RedDiskInSampler:: and link::Classes/RedSampler::.
+
+CLASSMETHODS::
+
+
+INSTANCEMETHODS::
+
+PRIVATE:: prCreateVoice
+
+EXAMPLES::
+
+code::
+s.boot;
+b= Buffer.read(s, Platform.resourceDir +/+ "sounds/a11wlk01-44_1.aiff");
+a= RedSamp(s);
+a.prepareForPlay(\b1, b)
+a.play(\b1)
+a.play(\b1, loop:1)
+a.stop(\b1)
+a.prepareForPlay(\b2, b, b.numFrames.div(2), 22050)  //start at 50%, copy 0.5sec
+a.prepareForPlay(\b3, b, b.numFrames.div(3))  //start at 33%, copy to end
+a.play(\b2)
+a.play(\b3)
+a.free
+b.free
+
+//--
+s.boot
+b= Buffer.read(s, Platform.resourceDir +/+ "sounds/a11wlk01-44_1.aiff");
+a= RedSamp(s);
+a.overlaps= 127;
+a.prepareForPlay(\buf0, b, 0, 10000)
+a.prepareForPlay(\buf1, b, 10000, 10000)
+a.prepareForPlay(\buf2, b, 20000, 10000)
+a.prepareForPlay(\buf3, b, 30000, 10000)
+(
+r= Routine.run({
+	99999.do{|i|
+		a.play([\buf0, \buf1, \buf2].choose, 0.5, 0.5, 0.5, 0.1, [0, 1].choose);  //key, atk, sus, rel, amp, out
+		0.1.wait;
+	};
+});
+)
+r.stop;
+a.free;
+b.free;
+::

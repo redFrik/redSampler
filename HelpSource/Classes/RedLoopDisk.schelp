@@ -1,7 +1,7 @@
 CLASS:: RedLoopDisk
 SUMMARY:: loop a soundfile from disk
 CATEGORIES:: Red>redSampler
-RELATED:: Classes/RedLoop, Classes/RedDiskInSampler, Classes/RedDiskInPlayer
+RELATED:: Classes/RedLoop, Classes/RedDiskInSampler, Classes/RedDiskInPlayer, Overviews/redSampler
 
 DESCRIPTION::
 Nothing fancy. This class just streams a soundfile from disk using link::Classes/DiskIn::.

@@ -1,7 +1,7 @@
 CLASS:: RedLoop
 SUMMARY:: loop a soundfile from memory
 CATEGORIES:: Red>redSampler
-RELATED:: Classes/RedLoopDisk, Classes/RedSampler, Classes/RedDiskInPlayer
+RELATED:: Classes/RedLoopDisk, Classes/RedSampler, Classes/RedDiskInPlayer, Overviews/redSampler
 
 DESCRIPTION::
 Nothing fancy. This class just plays a soundfile from RAM using link::Classes/PlayBuf::.

@@ -23,7 +23,7 @@ RedSampler : RedAbstractSampler {					//playing buffers in ram
 						1,
 						2						//doneAction
 					);
-					Out.ar(i_out, src*env*amp);
+					OffsetOut.ar(i_out, src*env*amp);
 				}, #['ir']).add;
 				SynthDef("redSampler-"++(i+1)++"loop", {
 					|i_out= 0, bufnum, amp= 0.7, attack= 0.01, release= 0.1, gate= 1, offset= 0|
@@ -43,7 +43,7 @@ RedSampler : RedAbstractSampler {					//playing buffers in ram
 						1,
 						2						//doneAction
 					);
-					Out.ar(i_out, src*env*amp);
+					OffsetOut.ar(i_out, src*env*amp);
 				}, #['ir']).add;
 				SynthDef("redSampler-"++(i+1)++"loopEnv", {
 					|i_out= 0, bufnum, amp= 0.7, attack= 0.01, sustain, release= 0.1, gate= 1, offset= 0|
@@ -63,7 +63,7 @@ RedSampler : RedAbstractSampler {					//playing buffers in ram
 						1,
 						2						//doneAction
 					);
-					Out.ar(i_out, src*env*amp);
+					OffsetOut.ar(i_out, src*env*amp);
 				}, #['ir']).add;
 			}
 		});
@@ -103,6 +103,6 @@ RedSamplerVoice : RedAbstractSamplerVoice {
 	}
 	prAllocBuffer {|action|
 		var num= numFrames ? -1;
-		buffer= Buffer.read(server, path, startFrame, num, action)
+		buffer= Buffer.read(server, path, startFrame, num, action);
 	}
 }

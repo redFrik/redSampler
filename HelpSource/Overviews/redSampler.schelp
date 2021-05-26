@@ -9,4 +9,5 @@ TABLE::
 ## link::Classes/RedLoop:: || loop a soundfile from memory (wrapper for RedSampler)
 ## link::Classes/RedLoopDisk:: || loop a soundfile from disk (wrapper for RedDiskInSampler)
 ## link::Classes/RedSampler:: || playing soundfiles from memory (with voice stealing)
+## link::Classes/RedSamp:: || playing parts of soundfiles from memory (with voice stealing)
 ::
