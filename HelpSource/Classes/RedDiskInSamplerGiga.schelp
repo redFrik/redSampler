@@ -31,6 +31,23 @@ INSTANCEMETHODS::
 
 PRIVATE:: prCreateVoice
 
+COPYMETHOD:: RedDiskInSampler -prepareForPlay
+COPYMETHOD:: RedDiskInSampler -play
+COPYMETHOD:: RedDiskInSampler -stop
+COPYMETHOD:: RedDiskInSampler -flush
+COPYMETHOD:: RedDiskInSampler -free
+COPYMETHOD:: RedDiskInSampler -freeKey
+COPYMETHOD:: RedDiskInSampler -loadedKeys
+COPYMETHOD:: RedDiskInSampler -playingKeys
+COPYMETHOD:: RedDiskInSampler -numFrames
+COPYMETHOD:: RedDiskInSampler -overlaps
+COPYMETHOD:: RedDiskInSampler -length
+COPYMETHOD:: RedDiskInSampler -channels
+COPYMETHOD:: RedDiskInSampler -buffers
+COPYMETHOD:: RedDiskInSampler -voicesLeft
+COPYMETHOD:: RedDiskInSampler -isPlaying
+COPYMETHOD:: RedDiskInSampler -amp
+
 EXAMPLES::
 
 code::

@@ -12,27 +12,22 @@ Soundfiles with sample rate that differ from the server's current samplerate wil
 
 CLASSMETHODS::
 
-METHOD:: new
-Creates a new RedLoopDisk instance. If code::Server.default:: is not booted, then this will boot it.
+COPYMETHOD:: RedLoop *new
 
 INSTANCEMETHODS::
 
 PRIVATE:: prType
 
-METHOD:: amp
-Set the amplitude.
+COPYMETHOD:: RedLoop -amp
 
-METHOD:: channels
-Returns the number of channels in the soundfile.
+COPYMETHOD:: RedLoop -channels
 
-METHOD:: length
-Returns the duration of the soundfile in seconds.
+COPYMETHOD:: RedLoop -length
 
 METHOD:: buffer
 Pointless. Just here to keep the same interface as link::Classes/RedLoop::
 
-METHOD:: free
-Stops playing and frees the buffer.
+COPYMETHOD:: RedLop -free
 
 EXAMPLES::
 

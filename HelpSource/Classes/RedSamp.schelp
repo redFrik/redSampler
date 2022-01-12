@@ -13,6 +13,36 @@ INSTANCEMETHODS::
 
 PRIVATE:: prCreateVoice
 
+METHOD:: prepareForPlay
+Attach a soundfile to a key (number or symbol) and create buffers - one for each overlapping voice. This method is also has the alias code::preload:: for backward compatibility.
+
+ARGUMENT:: key
+A number or a symbol.
+
+ARGUMENT:: buffer
+A link::Classes/Buffer:: instance.
+
+ARGUMENT:: startFrame
+In samples.
+
+ARGUMENT:: numFrames
+How much of the file to load in samples. Leave as code::nil:: to load the complete file.
+
+COPYMETHOD:: RedSampler -play
+COPYMETHOD:: RedSampler -stop
+COPYMETHOD:: RedSampler -flush
+COPYMETHOD:: RedSampler -free
+COPYMETHOD:: RedSampler -freeKey
+COPYMETHOD:: RedSampler -loadedKeys
+COPYMETHOD:: RedSampler -playingKeys
+COPYMETHOD:: RedSampler -overlaps
+COPYMETHOD:: RedSampler -length
+COPYMETHOD:: RedSampler -channels
+COPYMETHOD:: RedSampler -buffers
+COPYMETHOD:: RedSampler -voicesLeft
+COPYMETHOD:: RedSampler -isPlaying
+COPYMETHOD:: RedSampler -amp
+
 EXAMPLES::
 
 code::

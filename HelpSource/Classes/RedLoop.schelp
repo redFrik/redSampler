@@ -9,7 +9,7 @@ Nothing fancy. This class just plays a soundfile from RAM using link::Classes/Pl
 CLASSMETHODS::
 
 METHOD:: new
-Creates a new RedLoop instance. If code::Server.default:: is not booted, then this will boot it.
+Creates a new instance. If code::Server.default:: is not booted, then this will boot it.
 
 INSTANCEMETHODS::
 

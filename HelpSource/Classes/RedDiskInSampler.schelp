@@ -6,7 +6,9 @@ RELATED:: Classes/RedDiskInSamplerGiga, Classes/RedSampler, Classes/RedDiskInPla
 DESCRIPTION::
 This class buffers a small portion of a soundfile in RAM and then streams the rest from disk. It is built around the link::Classes/DiskIn:: ugen and makes it quick and easy to preload and manage lots of samples - much more than you could fit in your RAM. It associates each soundfile with a key (usually a number or a symbol) and can simultaneously play code::n:: overlaps of each sound.
 
-This class has a small delay before starting the sound as it buffers or 'cues' data right before playing. On the other hand it can deal with an almost unlimited number of samples. The subclass link::Classes/RedDiskInSamplerGiga:: is recommended if you need your samples to start instantly e.g. when syncing to a beat.
+This class has a small delay before starting the sound as it buffers or 'cues' data right before playing. On the other hand it can deal with an almost unlimited number of samples.
+So it will not trigger instantaneously but still be pretty quick. How quick depends on the link::#-numFrames:: and general disk drive activity.
+The subclass link::Classes/RedDiskInSamplerGiga:: is recommended if you need your samples to start instantly e.g. when syncing to a beat.
 
 Do not use this class for granular synthesis or for playing heaps of sounds at once. Remember that it streams data from disk. For playing very many soundfiles at once, use the link::Classes/RedSampler:: class.
 
@@ -44,7 +46,7 @@ ARGUMENT:: numFrames
 Safest to leave this as code::nil::. Then the link::#-numFrames:: below is used (default for that is 32768).
 
 METHOD:: play
-Preload and play the sample at key. For this class the actual preloading will happen here. So it will not trigger instantaneously but still be pretty quick. How quick depends on the link::#-numFrames:: to preload and disk drive activity.
+Play the sample preloaded at key.
 
 ARGUMENT:: key
 A number or a symbol.

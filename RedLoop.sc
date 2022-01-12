@@ -41,16 +41,3 @@ RedLoopDisk : RedLoop {
 		^RedDiskInSampler;
 	}
 }
-
-/*
-a= RedLoop("sounds/FreeHipHopAppleLoops/FreeHipHopAppleLoops/In Da City break.aif");
-a.free
-a= RedLoopDisk("sounds/crashingRedXM.aiff");
-a.free
-a= RedLoop("sounds/amenmono.wav", 1, 1);
-a.amp= 0.3
-a.channels
-a.length
-a.buffer
-a.free
-*/

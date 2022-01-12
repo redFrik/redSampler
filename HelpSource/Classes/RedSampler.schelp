@@ -4,7 +4,7 @@ CATEGORIES:: Red>redSampler
 RELATED:: Classes/RedDiskInSampler, Classes/RedDiskInSamplerGiga, Classes/RedDiskInPlayer, Overviews/redSampler
 
 DESCRIPTION::
-Nothing fancy. This class just loads soundfiles into RAM and then uses link::Classes/PlayBuf:: to play them back. It uses the same interface as link::Classes/RedDiskInSampler::.
+Nothing fancy. This class just loads soundfiles into RAM and then uses link::Classes/PlayBuf:: to play them back. It uses the same interface as link::Classes/RedDiskInSampler:: (except for code::numFrames:: which is is not implemented here).
 
 CLASSMETHODS::
 
@@ -13,6 +13,36 @@ PRIVATE:: initClass
 INSTANCEMETHODS::
 
 PRIVATE:: prCreateVoice
+
+METHOD:: prepareForPlay
+Attach a soundfile to a key (number or symbol) and create buffers - one for each overlapping voice. This method is also has the alias code::preload:: for backward compatibility.
+
+ARGUMENT:: key
+A number or a symbol.
+
+ARGUMENT:: path
+A string to a soundfile.
+
+ARGUMENT:: startFrame
+In samples.
+
+ARGUMENT:: numFrames
+How much of the file to load in samples. Leave as code::nil:: to load the complete file.
+
+COPYMETHOD:: RedDiskInSampler -play
+COPYMETHOD:: RedDiskInSampler -stop
+COPYMETHOD:: RedDiskInSampler -flush
+COPYMETHOD:: RedDiskInSampler -free
+COPYMETHOD:: RedDiskInSampler -freeKey
+COPYMETHOD:: RedDiskInSampler -loadedKeys
+COPYMETHOD:: RedDiskInSampler -playingKeys
+COPYMETHOD:: RedDiskInSampler -overlaps
+COPYMETHOD:: RedDiskInSampler -length
+COPYMETHOD:: RedDiskInSampler -channels
+COPYMETHOD:: RedDiskInSampler -buffers
+COPYMETHOD:: RedDiskInSampler -voicesLeft
+COPYMETHOD:: RedDiskInSampler -isPlaying
+COPYMETHOD:: RedDiskInSampler -amp
 
 EXAMPLES::
 
