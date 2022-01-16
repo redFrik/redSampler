@@ -31,11 +31,11 @@ COPYMETHOD:: RedLop -free
 
 EXAMPLES::
 
-code::
+CODE::
 a= RedLoopDisk(Platform.resourceDir +/+ "sounds/a11wlk01-44_1.aiff")
 a.amp= 0.3
 a.channels
 a.length
-a.buffer	//pointless in this class - just returns the DiskIn streaming buffer
+a.buffer  //pointless in this class - just returns the DiskIn streaming buffer
 a.free
 ::

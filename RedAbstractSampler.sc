@@ -12,30 +12,30 @@
 // 171223 changed from OSCresponderNode to onFree
 
 //todo:
-//		gui quad player with listview, xfadetime, play/stop, pause/resume, vol
-//		gui stereo player with listview, xfadetime, play/stop, pause/resume, vol
+//  gui quad player with listview, xfadetime, play/stop, pause/resume, vol
+//  gui stereo player with listview, xfadetime, play/stop, pause/resume, vol
 
 
 RedAbstractSampler {
-	var	<server, <>overlaps= 2, <keys;
-	*new {|server|								//if server=nil it will use Server.default
+	var <server, <>overlaps= 2, <keys;
+	*new {|server|  //if server=nil it will use Server.default
 		^super.new.init(server)
 	}
 	init {|argServer|
 		keys= ();
 		server= argServer ?? Server.default;
 	}
-	prepareForPlay {|key, path, startFrame= 0, numFrames|	//read file headers and allocate in advance
+	prepareForPlay {|key, path, startFrame= 0, numFrames|  //read file headers and allocate in advance
 		var sf;
 		if(server.serverRunning.not, {(this.class.asString++": server not running").error; this.halt});
 		sf= SoundFile.new;
 		if(sf.openRead(path).not, {(this.class.asString++": file not found_ "++path).error; sf.close; this.halt});
-		keys.put(key, {							//associate key with array of voice objects
+		keys.put(key, {  //associate key with array of voice objects
 			this.prCreateVoice(sf, startFrame, numFrames);
 		}.dup(overlaps));
 		sf.close;
 	}
-	preload {|...args| this.prepareForPlay(*args)}		//for backwards compability
+	preload {|...args| this.prepareForPlay(*args)}  //for backwards compability
 	loadedKeys {^keys.keys}
 	playingKeys {^this.loadedKeys.select{|x| this.isPlaying(x)}}
 	length {|key|
@@ -62,7 +62,7 @@ RedAbstractSampler {
 	//play with finite duration - if sustain=nil then use file length
 	play {|key, attack= 0, sustain, release= 0, amp= 0.7, out= 0, group, loop= 0|
 		var voc= this.prVoices(key).detect{|x|
-			x.isPlaying.not;						//find first voice ready to play
+			x.isPlaying.not;  //find first voice ready to play
 		};
 		if(voc.isNil, {
 			(this.class.asString++": no free slots -increase overlaps or play slower").warn;
@@ -72,9 +72,9 @@ RedAbstractSampler {
 	}
 	stop {|key, release= 0.4|
 		var voc= this.prVoices(key).detect{|x|
-			x.isPlaying and:{x.isReleased.not};		//find first voice playing and not released
+			x.isPlaying and:{x.isReleased.not};  //find first voice playing and not released
 		};
-		if(voc.isNil, {							//perhaps remove this warning???
+		if(voc.isNil, {  //perhaps remove this warning???
 			(this.class.asString++": all voices already stopped").warn;
 		}, {
 			voc.stop(release);
@@ -90,18 +90,18 @@ RedAbstractSampler {
 		var voices= keys.removeAt(key);
 		if(voices.notNil, {voices.do{|x| x.free}});
 	}
-	free {										//free synths, close files and free buffers
+	free {  //free synths, close files and free buffers
 		keys.do{|voices| voices.do{|x| x.free}};
 		keys= ();
 	}
 
 	//--private
 	prVoices {|key|
-		var voices= keys[key];						//find all voices objects for this key
+		var voices= keys[key];  //find all voices objects for this key
 		if(voices.isNil, {
 			(this.class.asString++": key not found").warn;
 		});
-		^voices									//returns an array of voice objects
+		^voices  //returns an array of voice objects
 	}
 	prCreateVoice {|sf, startFrame, argNumFrames|
 		^this.subclassResponsibility(thisMethod)
@@ -138,12 +138,12 @@ RedAbstractSamplerVoice {
 	}
 }
 
-/*	-- debugcode --
+/*-- debugcode --
 s.boot;
 s.stopAliveThread;
 s.dumpOSC(1)
-d= RedDiskInSampler(s);	//normal
-d= RedDiskInSamplerGiga(s);	//normal
+d= RedDiskInSampler(s);  //normal
+d= RedDiskInSamplerGiga(s);  //normal
 d.preload(\e, "~/Documents/soundfiles/bosen44100/56/E2.aif".standardizePath);
 d.play(\e, 0, 0.11, 0.1);
 d.play(\e, 0, 0.3, 0);
@@ -157,16 +157,16 @@ d.free
 */
 
 
-/*	-- testcode --
+/*-- testcode --
 s.boot;
-d= RedDiskInSampler(s);	//normal
-d= RedDiskInSamplerGiga(s);	//or fast trigger version
+d= RedDiskInSampler(s);  //normal
+d= RedDiskInSamplerGiga(s);  //or fast trigger version
 d.preload(\a, "~/Documents/soundfiles/bosen44100/56/A2.aif".standardizePath);
 d.preload(\f, "~/Documents/soundfiles/bosen44100/40/F2.aif".standardizePath);
 d.preload(\e, "~/Documents/soundfiles/bosen44100/56/E2.aif".standardizePath);
 d.voicesLeft(\e)
-d.play(\e, 0.2, 0.5, 1);	//key, attackTime, amp, outbus
-d.stop(\e, 1.0);			//key, releaseTime
+d.play(\e, 0.2, 0.5, 1);  //key, attackTime, amp, outbus
+d.stop(\e, 1.0);  //key, releaseTime
 d.play(\e, 0.1, amp:1);
 d.stop(\e, 2.1);
 d.play(\e);
@@ -188,12 +188,12 @@ d.free;
 */
 
 
-/*	-- more testcode --
+/*-- more testcode --
 s.boot;
 ~srcGrp= Group.head(s);
 ~efxGrp= Group.tail(s);
-d= RedDiskInSampler(s);	//normal
-d= RedDiskInSamplerGiga(s);	//or fast trigger version
+d= RedDiskInSampler(s);  //normal
+d= RedDiskInSamplerGiga(s);  //or fast trigger version
 d.preload(\e, "~/Documents/soundfiles/bosen44100/56/E2.aif".standardizePath);
 e= SynthDef("ringmod", {Out.ar(0, In.ar(0, 2)*LPF.ar(BrownNoise.ar, 90))}).play(~efxGrp);
 d.play(\e);
@@ -205,8 +205,8 @@ d.free;
 e.free;
 
 i= Server.internal.boot;
-d= RedDiskInSampler(i);	//normal
-d= RedDiskInSamplerGiga(i);	//or fast trigger version
+d= RedDiskInSampler(i);  //normal
+d= RedDiskInSamplerGiga(i);  //or fast trigger version
 d.preload(\e, "sounds/bosen44100/56/E2.aif");
 d.play(\e);
 d.stop(\e);
@@ -220,6 +220,6 @@ a.prepareForPlay(\snd1, Platform.resourceDir+/+"sounds/a11wlk01-44_1.aiff");
 a.play(\snd1);
 a.free;
 a.prepareForPlay(\snd1, "~/Documents/soundfiles/jongly.aif".standardizePath);
-a.play(\snd1);	//this should not play a glitchy mix of the two previous buffers
+a.play(\snd1);  //this should not play a glitchy mix of the two previous buffers
 a.free
 */

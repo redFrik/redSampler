@@ -9,7 +9,7 @@ Uses link::Classes/RedDiskInSampler:: to stream soundfiles from disk. Use it to 
 Drag and drop some soundfiles or a folder on the gui. Use ARROW KEYS to navigate and ENTER to play.
 
 The GUI works as follows...
-table::
+TABLE::
 ## vol || playback volume
 ## env || attack and release time in seconds
 ## bus || output bus index
@@ -59,11 +59,11 @@ Access the window created.
 
 EXAMPLES::
 
-code::
+CODE::
 a= RedDiskInPlayer(s);
 a.sampler
 a.isPlaying
 a.soundFiles
 a.bus
-a.free		//or close the window, or press CmdPeriod
+a.free  //or close the window, or press CmdPeriod
 ::

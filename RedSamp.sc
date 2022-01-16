@@ -4,7 +4,7 @@
 RedSamp : RedSampler {
 	prepareForPlay {|key, buffer, startFrame= 0, numFrames|
 		if(server.serverRunning.not, {(this.class.asString++": server not running").error; this.halt});
-		keys.put(key, {							//associate key with array of voice objects
+		keys.put(key, {  //associate key with array of voice objects
 			this.prCreateVoice(buffer, startFrame, numFrames);
 		}.dup(overlaps));
 	}

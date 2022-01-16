@@ -1,10 +1,10 @@
 //these classes are part of the RedSample package / redFrik, gnu gpl v2
 //preloads buffer into ram
 
-RedSampler : RedAbstractSampler {					//playing buffers in ram
+RedSampler : RedAbstractSampler {  //playing buffers in ram
 	*initClass {
 		ServerBoot.addToAll({
-			8.do{|i|								//change here for more channels than 8
+			8.do{|i|  //change here for more channels than 8
 				SynthDef("redSampler-"++(i+1), {
 					|i_out= 0, bufnum, amp= 0.7, attack= 0.01, sustain, release= 0.1, gate= 1, offset= 0|
 					var src= PlayBuf.ar(
@@ -21,7 +21,7 @@ RedSampler : RedAbstractSampler {					//playing buffers in ram
 						1,
 						0,
 						1,
-						2						//doneAction
+						2  //doneAction
 					);
 					OffsetOut.ar(i_out, src*env*amp);
 				}, #['ir']).add;
@@ -41,7 +41,7 @@ RedSampler : RedAbstractSampler {					//playing buffers in ram
 						1,
 						0,
 						1,
-						2						//doneAction
+						2  //doneAction
 					);
 					OffsetOut.ar(i_out, src*env*amp);
 				}, #['ir']).add;
@@ -61,7 +61,7 @@ RedSampler : RedAbstractSampler {					//playing buffers in ram
 						1,
 						0,
 						1,
-						2						//doneAction
+						2  //doneAction
 					);
 					OffsetOut.ar(i_out, src*env*amp);
 				}, #['ir']).add;

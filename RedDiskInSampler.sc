@@ -1,11 +1,11 @@
 //these classes are part of the RedSample package / redFrik, gnu gpl v2
 //preloads buffer when .play so there will be a slight hickup and latency
 
-RedDiskInSampler : RedAbstractSampler {				//playing sounds from disk
-	var <>numFrames= 32768;							//preload buffer size in samples
+RedDiskInSampler : RedAbstractSampler {  //playing sounds from disk
+	var <>numFrames= 32768;  //preload buffer size in samples
 	*initClass {
 		ServerBoot.addToAll({
-			8.do{|i|								//change here for more channels than 8
+			8.do{|i|  //change here for more channels than 8
 				SynthDef("redDiskInSampler-"++(i+1), {
 					|i_out= 0, bufnum, amp= 0.7, attack= 0.01, sustain, release= 0.1, gate= 1|
 					var src= DiskIn.ar(i+1, bufnum, 0);
@@ -15,7 +15,7 @@ RedDiskInSampler : RedAbstractSampler {				//playing sounds from disk
 						1,
 						0,
 						1,
-						2						//doneAction
+						2  //doneAction
 					);
 					Out.ar(i_out, src*env*amp);
 				}, #['ir']).add;
@@ -28,7 +28,7 @@ RedDiskInSampler : RedAbstractSampler {				//playing sounds from disk
 						1,
 						0,
 						1,
-						2						//doneAction
+						2  //doneAction
 					);
 					Out.ar(i_out, src*env*amp);
 				}, #['ir']).add;
@@ -41,7 +41,7 @@ RedDiskInSampler : RedAbstractSampler {				//playing sounds from disk
 						1,
 						0,
 						1,
-						2						//doneAction
+						2  //doneAction
 					);
 					Out.ar(i_out, src*env*amp);
 				}, #['ir']).add;

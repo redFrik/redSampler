@@ -19,18 +19,20 @@ RedDiskInPlayer {
 	var playIndex, bgcol, fgcol, incdecTask;
 	var incView, decView, progressView, infoView, volNumView, volSldView;
 	var envNumView, envSldView, listView, busView, loopView, filterView;
+
 	*new {|server, bus= 0, numItems= 10|
 		^super.new.initRedDiskInPlayer(server, bus, numItems);
 	}
+
 	initRedDiskInPlayer {|argServer, argBus, argNumItems|
 		var server= argServer ?? Server.default;
-		var w= 160;								//widget max width
-		var h= 18;								//widget height
-		var fnt= Font("Monaco", 9);		//later from skin
+		var w= 160;  //widget max width
+		var h= 18;  //widget height
+		var fnt= Font("Monaco", 9);  //later from skin
 		var volSpec= [-90, 6, \db].asSpec;
 
-		bgcol= Color.red(0.8);						//later from skin
-		fgcol= Color.black;						//later from skin
+		bgcol= Color.red(0.8);  //later from skin
+		fgcol= Color.black;  //later from skin
 		soundFiles= [];
 
 		win= Window(this.class.name, Rect(500, 200, w+10, h*15), false);
@@ -54,7 +56,7 @@ RedDiskInPlayer {
 			if(isPlaying, {sampler.amp= volNumView.value.dbamp});
 		}
 		.mouseUpAction_{|view, x, y, mod|
-			if(mod&262144==262144, {			//ctrl to reset
+			if(mod&262144==262144, {  //ctrl to reset
 				{view.valueAction= volSpec.unmap(0)}.defer(0.1);
 			});
 		};
@@ -198,9 +200,11 @@ RedDiskInPlayer {
 			};
 		};
 	}
+
 	bus {
 		^busView.value;
 	}
+
 	free {
 		win.close;
 	}
@@ -237,6 +241,7 @@ RedDiskInPlayer {
 			};
 		}).play(AppClock);
 	}
+
 	prStopFunc {|view|
 		isPlaying= false;
 		if(sampler.playingKeys.notEmpty, {
@@ -248,6 +253,7 @@ RedDiskInPlayer {
 		progressView.value= #[0];
 		incView.string= "0:00";
 	}
+
 	prUpdateInfo {|index|
 		var sf= soundFiles[index];
 		if(sf.notNil, {

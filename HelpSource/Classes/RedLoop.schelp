@@ -32,7 +32,7 @@ Stops playing and frees the buffer.
 
 EXAMPLES::
 
-code::
+CODE::
 a= RedLoop(Platform.resourceDir +/+ "sounds/a11wlk01-44_1.aiff")
 a.amp= 0.3
 a.channels

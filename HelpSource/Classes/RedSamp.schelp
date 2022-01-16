@@ -45,7 +45,7 @@ COPYMETHOD:: RedSampler -amp
 
 EXAMPLES::
 
-code::
+CODE::
 s.boot;
 b= Buffer.read(s, Platform.resourceDir +/+ "sounds/a11wlk01-44_1.aiff");
 a= RedSamp(s);
