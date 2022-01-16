@@ -6,11 +6,11 @@ RELATED:: Classes/RedDiskInSampler, Overviews/redSampler
 DESCRIPTION::
 Uses link::Classes/RedDiskInSampler:: to stream soundfiles from disk. Use it to play back long soundfiles.
 
-Drag and drop some soundfiles or a folder on the gui. Use ARROW KEYS to navigate and ENTER to play.
+Drag and drop some soundfiles or a folder on the gui. Use ARROW keys to navigate and ENTER to play.
 
 The GUI works as follows...
 TABLE::
-## vol || playback volume
+## vol || playback volume - (hold down CTRL key to reset)
 ## env || attack and release time in seconds
 ## bus || output bus index
 ## loop || keep repeating the soundfile. Note: not smooth because of file preloading
@@ -60,7 +60,7 @@ Access the window created.
 EXAMPLES::
 
 CODE::
-a= RedDiskInPlayer(s);
+a= RedDiskInPlayer();  //will boot the server if not already running
 a.sampler
 a.isPlaying
 a.soundFiles

@@ -1,7 +1,12 @@
 //redFrik
 
+//--changes220116
+//replace FlowLayout with Layout and fix background colors
+//change from Dialog to FileDialog to better handle folders
+//folder selection now remember last location
+//progressbar now wrap around when loop is on
 //--changes171223:
-//rewrite to work with qt and 3.9
+//rewrite to work with Qt and sc3.9
 //--changes090829:
 //drag and drop from finder using a dragsink
 //--changes090613:
@@ -12,13 +17,13 @@
 
 //--todo:
 //* colours and font from skin?
-//* avoid n_set node not found when setting volume
 
 RedDiskInPlayer {
 	var <sampler, <isPlaying= false, <soundFiles, <win;
 	var playIndex, bgcol, fgcol, incdecTask;
 	var incView, decView, progressView, infoView, volNumView, volSldView;
 	var envNumView, envSldView, listView, busView, loopView, filterView;
+	var pathPrev;  //remember last location
 
 	*new {|server, bus= 0, numItems= 10|
 		^super.new.initRedDiskInPlayer(server, bus, numItems);
@@ -28,165 +33,177 @@ RedDiskInPlayer {
 		var server= argServer ?? Server.default;
 		var w= 160;  //widget max width
 		var h= 18;  //widget height
-		var fnt= Font("Monaco", 9);  //later from skin
-		var volSpec= [-90, 6, \db].asSpec;
+		var fnt= Font(Font.defaultMonoFace, 9);
+		var volSpec= #[-90, 6, \db].asSpec;
 
-		bgcol= Color.red(0.8);  //later from skin
-		fgcol= Color.black;  //later from skin
+		bgcol= Color.red(0.8);
+		fgcol= Color.black;
 		soundFiles= [];
 
-		win= Window(this.class.name, Rect(500, 200, w+10, h*15), false);
+		win= Window(
+			this.class.name,
+			Rect(500, 200, w+10, argNumItems*(fnt.size+2)+150),
+			false
+		);
 		win.alpha_(0.9);
 		win.view.background= bgcol;
-		win.view.decorator= FlowLayout(win.view.bounds);
+		win.view.layout= VLayout(
 
-		volNumView= NumberBox(win, Rect(0, 0, w*0.25, h))
-		.background_(bgcol)
-		.typingColor_(Color.white)
-		.value_(0)
-		.action_{|view|
-			volSldView.value= volSpec.unmap(view.value);
-			if(isPlaying, {sampler.amp= volNumView.value.dbamp});
-		};
-		volSldView= Slider(win, Rect(0, 0, w*0.6, h))
-		.knobColor_(fgcol)
-		.value_(volSpec.unmap(0))
-		.action_{|view|
-			volNumView.value= volSpec.map(view.value).round(0.1);
-			if(isPlaying, {sampler.amp= volNumView.value.dbamp});
-		}
-		.mouseUpAction_{|view, x, y, mod|
-			if(mod&262144==262144, {  //ctrl to reset
-				{view.valueAction= volSpec.unmap(0)}.defer(0.1);
-			});
-		};
-		StaticText(win, Rect(0, 0, "vol".bounds(fnt).width, h))
-		.string_("vol");
-		win.view.decorator.nextLine;
+			HLayout(
+				volNumView= NumberBox().fixedWidth_(w*0.25)
+				.background_(bgcol)
+				.typingColor_(Color.white)
+				.value_(0)
+				.action_({|view|
+					volSldView.value= volSpec.unmap(view.value);
+					if(isPlaying, {sampler.amp= volNumView.value.dbamp});
+				}),
+				volSldView= Slider().minWidth_(w*0.6)
+				.background_(bgcol)
+				.knobColor_(fgcol)
+				.orientation_(\horizontal)
+				.value_(volSpec.unmap(0))
+				.action_({|view|
+					volNumView.value= volSpec.map(view.value).round(0.1);
+					if(isPlaying, {sampler.amp= volNumView.value.dbamp});
+				})
+				.mouseUpAction_({|view, x, y, mod|
+					if(mod.isCtrl, {
+						{view.valueAction= volSpec.unmap(0)}.defer(0.1);
+					});
+				}),
+				StaticText().string_("vol")
+			),
 
-		envNumView= NumberBox(win, Rect(0, 0, w*0.25, h))
-		.background_(bgcol)
-		.typingColor_(Color.white)
-		.value_(0.05)
-		.action_{|view|
-			view.value= view.value.max(0);
-			envSldView.value= (view.value/10).min(1);
-		};
-		envSldView= Slider(win, Rect(0, 0, w*0.6, h))
-		.knobColor_(fgcol)
-		.action_{|view|
-			envNumView.value= (view.value*10).round(0.1);
-		};
-		StaticText(win, Rect(0, 0, "env".bounds(fnt).width, h))
-		.string_("env");
-		win.view.decorator.nextLine;
+			HLayout(
+				envNumView= NumberBox().fixedWidth_(w*0.25)
+				.background_(bgcol)
+				.typingColor_(Color.white)
+				.value_(0.05)
+				.action_({|view|
+					view.value= view.value.max(0);
+					envSldView.value= (view.value/10).min(1);
+				}),
+				envSldView= Slider().minWidth_(w*0.6)
+				.background_(bgcol)
+				.knobColor_(fgcol)
+				.orientation_(\horizontal)
+				.action_({|view|
+					envNumView.value= (view.value*10).round(0.1);
+				}),
+				StaticText().string_("env")
+			),
 
-		busView= NumberBox(win, Rect(0, 0, w*0.25, h))
-		.background_(bgcol)
-		.typingColor_(Color.white)
-		.value_(argBus)
-		.action_{|view|
-			view.value= view.value.asInteger.max(0);
-		};
-		StaticText(win, Rect(0, 0, "bus".bounds(fnt).width, h))
-		.string_("bus");
-		win.view.decorator.shift(10, 0);
-		loopView= Button(win, Rect(0, 0, w*0.4, h))
-		.states_([["loop", fgcol, Color.clear], ["loop", bgcol, fgcol]]);
-		win.view.decorator.nextLine;
+			HLayout(
+				busView= NumberBox().fixedWidth_(w*0.25)
+				.background_(bgcol)
+				.typingColor_(Color.white)
+				.value_(argBus)
+				.action_({|view|
+					view.value= view.value.asInteger.max(0);
+				}),
+				StaticText().string_("bus"),
 
-		win.view.decorator.shift(10, 0);
-		incView= StaticText(win, Rect(0, 0, w*0.4, h)).string_("0:00");
-		win.view.decorator.shift(10, 0);
-		decView= StaticText(win, Rect(0, 0, w*0.4, h)).string_("0:00.0");
-		win.view.decorator.nextLine;
+				loopView= Button().minWidth_(w*0.4)
+				.states_([["loop", fgcol, bgcol], ["loop", bgcol, fgcol]])
+			),
 
-		progressView= MultiSliderView(win, Rect(0, 0, w, h))
-		.indexIsHorizontal_(false)
-		.editable_(false)
-		.indexThumbSize_(h)
-		.valueThumbSize_(0)
-		.isFilled_(true)
-		.canFocus_(false)
-		.value_([0]);
-		win.view.decorator.nextLine;
+			HLayout(
+				incView= StaticText().string_("0:00"),
+				decView= StaticText().string_("0:00.0")
+			),
 
-		infoView= StaticText(win, Rect(0, 0, w, h));
-		win.view.decorator.nextLine;
+			progressView= MultiSliderView()
+			.background_(bgcol)
+			.indexIsHorizontal_(false)
+			.editable_(false)
+			.indexThumbSize_(h)
+			.valueThumbSize_(0)
+			.isFilled_(true)
+			.canFocus_(false)
+			.value_([0]),
 
-		listView= ListView(win, Rect(0, 0, w, h*argNumItems))
-		.canReceiveDragHandler_{View.currentDrag.isString or:{View.currentDrag.isKindOf(Array)}}
-		.receiveDragHandler_{|view|
-			var drag= View.currentDrag;
-			if(drag.isString, {
-				if(drag.last==$/, {
-					soundFiles= (drag++"*").pathMatch.collect{|x| SoundFile(x)};  //folder of files
+			infoView= StaticText(),
+
+			listView= ListView()
+			.canReceiveDragHandler_({View.currentDrag.isString or:{
+				View.currentDrag.isKindOf(Array)
+			}})
+			.receiveDragHandler_({|view|
+				var drag= View.currentDrag;
+				if(drag.isString, {
+					if(drag.last==$/, {
+						soundFiles= (drag++"*").pathMatch.collect{|x| SoundFile(x)};  //folder of files
+					}, {
+						soundFiles= [SoundFile(drag)];  //single file
+					});
 				}, {
-					soundFiles= [SoundFile(drag)];  //single file
+					soundFiles= drag.collect{|x| SoundFile(x)};  //selected files
 				});
-			}, {
-				soundFiles= drag.collect{|x| SoundFile(x)};  //selected files
-			});
-			if(filterView.value>0, {
-				soundFiles= soundFiles.select{|x| x.numChannels==filterView.value};
-			});
-			soundFiles.do{|x, i|
-				sampler.prepareForPlay(i, x.path);
-			};
-			view.items= soundFiles.collect{|x| x.path.basename};
-			this.prUpdateInfo(0);
-		}
-		.background_(bgcol)
-		.hiliteColor_(bgcol)
-		.selectedStringColor_(Color.white)
-		.action_{|view|
-			this.prUpdateInfo(view.value);
-			if(isPlaying, {
-				this.prStopFunc(view);
-			});
-		}
-		.enterKeyAction_{|view|
-			if(soundFiles[view.value].notNil, {
-				if(isPlaying, {
-					this.prStopFunc(view);
-				}, {
-					this.prPlayFunc(view);
-				});
-			});
-		};
-		win.view.decorator.nextLine;
-
-		Button(win, Rect(0, 0, w*0.4, h))
-		.states_([["folder...", fgcol, Color.clear]])
-		.action_{
-			if(sampler.notNil, {sampler.free});
-			Dialog.openPanel({|x|
-				var path= x.dirname;
-				soundFiles= SoundFile.collect(path+/+"*");
 				if(filterView.value>0, {
 					soundFiles= soundFiles.select{|x| x.numChannels==filterView.value};
 				});
 				soundFiles.do{|x, i|
 					sampler.prepareForPlay(i, x.path);
 				};
-				listView.items= soundFiles.collect{|x| x.path.basename};
+				view.items= soundFiles.collect{|x| x.path.basename};
 				this.prUpdateInfo(0);
-			});
-			listView.focus;
-		}.focus;
-		win.view.decorator.shift(10, 0);
-		filterView= NumberBox(win, Rect(0, 0, w*0.2, h))
-		.background_(bgcol)
-		.typingColor_(Color.white)
-		.value_(0)
-		.action_{|view|
-			view.value= view.value.max(0).round;
-		};
-		StaticText(win, Rect(0, 0, "filter".bounds(fnt).width, h))
-		.string_("filter");
+			})
+			.background_(bgcol)
+			.hiliteColor_(bgcol)
+			.selectedStringColor_(Color.white)
+			.action_({|view|
+				this.prUpdateInfo(view.value);
+				if(isPlaying, {
+					this.prStopFunc(view);
+				});
+			})
+			.enterKeyAction_({|view|
+				if(soundFiles[view.value].notNil, {
+					if(isPlaying, {
+						this.prStopFunc(view);
+					}, {
+						this.prPlayFunc(view);
+					});
+				});
+			}),
 
-		win.view.children.do{|x| if(x.respondsTo('font_'), {x.font_(fnt)})};
-		win.bounds= win.bounds.setExtent(win.bounds.width, win.view.decorator.currentBounds.height+4);
+			HLayout(
+				Button().minWidth_(w*0.4)
+				.states_([["folder...", fgcol, bgcol]])
+				.action_({
+					if(sampler.notNil, {sampler.free});
+					FileDialog({|path|
+						if(File.type(path)==\regular, {path= path.dirname});
+						pathPrev= path.dirname;
+						soundFiles= SoundFile.collect(path+/+"*");
+						if(filterView.value>0, {
+							soundFiles= soundFiles.select{|x| x.numChannels==filterView.value};
+						});
+						soundFiles.do{|x, i|
+							sampler.prepareForPlay(i, x.path);
+						};
+						listView.items= soundFiles.collect{|x| x.path.basename};
+						this.prUpdateInfo(0);
+					}, nil, 0, 0, true, pathPrev);
+					listView.focus;
+				}).focus,
+				filterView= NumberBox().fixedWidth_(w*0.2)
+				.background_(bgcol)
+				.typingColor_(Color.white)
+				.value_(0)
+				.action_({|view|
+					view.value= view.value.max(0).round;
+				}),
+				StaticText().string_("filter")
+			)
+		).margins_(4).spacing_(4);
+
+		win.view.children.do{|v|
+			if(v.respondsTo('font_'), {v.font_(fnt)});
+			if(v.isKindOf(ListView).not, {v.maxHeight_(h)});
+		};
+
 		Routine.run{
 			server.bootSync;
 			sampler= RedDiskInSampler(server);
@@ -236,7 +253,7 @@ RedDiskInPlayer {
 				10.do{
 					0.1.wait;
 					now= SystemClock.seconds-startTime;
-					progressView.value= [(now/stopTime).min(1)];
+					progressView.value= [(now/stopTime)%1];
 				};
 			};
 		}).play(AppClock);
@@ -267,6 +284,3 @@ RedDiskInPlayer {
 		});
 	}
 }
-/*
-RedDiskInPlayer.new(bus:1, numItems:20)
-*/

@@ -10,6 +10,7 @@
 // 090507 added numFrames argument to prepareForPlay.  useful mainly for RedSampler.  also loop:2
 // 121126 changed synthdef creation from StartUp.add to ServerBoot.addToAll and .store to .add
 // 171223 changed from OSCresponderNode to onFree
+// 220116 fix for n_set warning when calling amp_
 
 //todo:
 //  gui quad player with listview, xfadetime, play/stop, pause/resume, vol
@@ -81,7 +82,7 @@ RedAbstractSampler {
 		});
 	}
 	amp_ {|val|
-		keys.do{|voices| voices.do{|x| x.amp_(val)}};
+		keys.do{|voices| voices.do{|x| if(x.isPlaying, {x.amp_(val)})}};
 	}
 	flush {|release= 0.4|
 		keys.do{|voices| voices.do{|x| x.stop(release)}};
