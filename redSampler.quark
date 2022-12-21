@@ -3,7 +3,7 @@
 	\path:		"redSampler",
 	\summary:	"Playback of soundfiles from disk or RAM. With simple envelope, voices and looping. The 'giga' sampler class (RedDiskInSamplerGiga) is useful for massive sample libraries that will not fit in RAM. It preloads a bit of the beginning of all the soudfiles and streams the rest from disk when needed.",
 	\author:	"redFrik",
-	\schelp:	"redSamplerOverview",
+	\schelp:	"Overviews/redSamplerOverview",
 	\url:		"https://www.fredrikolofsson.com/",
 	\since:	"2004",
 	\version:	"0.5.1",
