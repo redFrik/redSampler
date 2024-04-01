@@ -27,7 +27,7 @@ COPYMETHOD:: RedLoop -length
 METHOD:: buffer
 Pointless. Just here to keep the same interface as link::Classes/RedLoop::
 
-COPYMETHOD:: RedLop -free
+COPYMETHOD:: RedLoop -free
 
 EXAMPLES::
 
